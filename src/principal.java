@@ -1,26 +1,34 @@
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 
 public class principal {
     public static void main(String[] args)throws IOException, InterruptedException {
 
-        String direccion = "https://v6.exchangerate-api.com/v6/0a568581bf8fa195f19e26c7/latest/USD";
+        String url_str = "https://v6.exchangerate-api.com/v6/0a568581bf8fa195f19e26c7/latest/USD";
 
-        HttpClient client = HttpClient.newHttpClient();
+        // Making Request
+        URL url = new URL(url_str);
+        HttpURLConnection request = (HttpURLConnection) url.openConnection();
+        request.connect();
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(direccion)).build();
+    // Convert to JSON
+        JsonParser jp = new JsonParser();
+        JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
+        JsonObject jsonobj = root.getAsJsonObject();
 
-        HttpResponse<String> response = client.send(request,
-                HttpResponse.BodyHandlers.ofString());
+    // Accessing object
+        String req_result = jsonobj.get("result").getAsString();
 
-        String json = response.body();
 
-        System.out.println(json);
-
+        System.out.println(req_result);
 
 
     }
