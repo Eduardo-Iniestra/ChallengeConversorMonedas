@@ -1,35 +1,51 @@
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
+import java.util.Scanner;
 
 public class principal {
-    public static void main(String[] args)throws IOException, InterruptedException {
+    public static void main(String[] args) {
 
-        String url_str = "https://v6.exchangerate-api.com/v6/0a568581bf8fa195f19e26c7/latest/USD";
+        Scanner sc = new Scanner(System.in);
+        Peticion p = new Peticion();
 
-        // Making Request
-        URL url = new URL(url_str);
-        HttpURLConnection request = (HttpURLConnection) url.openConnection();
-        request.connect();
+        int numero = 0;
 
-    // Convert to JSON
-        JsonParser jp = new JsonParser();
-        JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
-        JsonObject jsonobj = root.getAsJsonObject();
+        while(numero != 7) {
+            System.out.println("**************************************");
+            System.out.println("Sea bienvenido/a al conversor de Moneda");
+            System.out.println("Ingrese el número dependiendo de la solicitud deseada");
 
-    // Accessing object
-        String req_result = jsonobj.get("result").getAsString();
+            System.out.println("1) Dólar -> Peso argentino");
+            System.out.println("2) Peso argentino -> Dólar");
+            System.out.println("3) Dólar -> Peso Mexicano");
+            System.out.println("4) Peso Mexicano -> Dólar");
+            System.out.println("5) Dólar -> Peso colombiano");
+            System.out.println("6) Peso colombiano -> Dólar");
+            System.out.println("7) Salir");
+            System.out.println("Elija la opcion válida: ");
 
+            System.out.println("**************************************");
+            numero = sc.nextInt();
+            if (numero == 7){
+                break;
+            }
 
-        System.out.println(req_result);
+            System.out.println("¿Cuánto dinero deseas convertir?");
+            int convertir = sc.nextInt();
 
-
+            if (numero == 1){
+                p.api("USD","ARS", convertir);
+            }else if (numero == 2){
+                p.api("ARS","USD", convertir);
+            }else if (numero == 3){
+                p.api("USD","MXN", convertir);
+            }else if (numero == 4){
+                p.api("MXN","USD", convertir);
+            }else if (numero == 5){
+                p.api("USD","COP", convertir);
+            }else if (numero == 6){
+                p.api("COP","USD", convertir);
+            }else{
+                System.out.println("Ingresaste un numero no valido");
+            }
+        }
     }
 }
